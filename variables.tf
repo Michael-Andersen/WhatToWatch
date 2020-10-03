@@ -3,9 +3,14 @@ variable "bucket_for_json" {
   default = "aws-what-to-watch-json"
 }
 
-variable "function_name" {
+variable "tweet_function_name" {
   description = "function name for lambda"
   default = "what_to_watch_lambda"
+}
+
+variable "poll_function_name" {
+  description = "function name for lambda"
+  default = "what_to_watch_poll_lambda"
 }
 
 variable "runtime" {

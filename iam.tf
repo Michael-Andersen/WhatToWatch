@@ -57,6 +57,19 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
     "s3:*"
     ]
   }
+
+statement {
+    sid = "AllowReadingSQS"
+    effect = "Allow"
+
+    resources = [
+     "${aws_sqs_queue.lambda_queue.arn}",
+    ]
+
+    actions = [
+    "sqs:*"
+    ]
+  }
 }
 
 resource "aws_iam_policy" "lambda_iam_policy" {

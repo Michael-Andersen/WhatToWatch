@@ -16,6 +16,7 @@ def config(consumer_key, consumer_secret, access_token, access_token_secret):
 def check_mentions(api, keywords, since_id):
     logger.info("Retrieving mentions")
     new_since_id = since_id
+    mentions = []
     for tweet in tweepy.Cursor(api.mentions_timeline,
                                since_id=since_id).items():
         new_since_id = max(tweet.id, new_since_id)
@@ -27,9 +28,10 @@ def check_mentions(api, keywords, since_id):
             tags = tweet.text.split('#')[1].strip()
             words = re.findall('[A-Z][^A-Z0-9]*|[0-9]+', tags)
             film = '-'.join(words)
-            reply(api, tweet.user.screen_name, tweet.id_str, film.lower())
-    logger.info(f"new since id {new_since_id}")
-    return new_since_id
+            #reply(api, tweet.user.screen_name, tweet.id_str, film.lower())
+            mentions.append({'user': tweet.user.screen_name, 'id': tweet.id_str, 'film': film.lower()})
+    return new_since_id, mentions
+
 
 
 def reply(api, user, user_id, film):
