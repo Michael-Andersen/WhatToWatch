@@ -23,10 +23,9 @@ def check_mentions(api, keywords, since_id):
         logger.info(tweet.text)
         if any(keyword in tweet.text.lower() for keyword in keywords):
             logger.info(f"Answering to {tweet.user.name}")
-            tags = tweet.text.split('#')[1].strip()
+            tags = tweet.text.split('#')[1].split(' ')[0].strip()
             words = re.findall('[A-Z][^A-Z0-9]*|[0-9]+', tags)
             film = '-'.join(words)
-            #reply(api, tweet.user.screen_name, tweet.id_str, film.lower())
             mentions.append({'user': tweet.user.screen_name, 'id': tweet.id_str, 'film': film.lower()})
     return new_since_id, mentions
 
