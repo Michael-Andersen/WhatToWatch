@@ -6,15 +6,22 @@ import boto3
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+REGION = 'us-west-1'
 
 def lambda_handler(event, context):
     for record in event['Records']:
-        s3 = boto3.resource('s3')
-        content_object = s3.Object('aws-what-to-watch-json', 'bot.json')
-        file_content = content_object.get()['Body'].read().decode('utf-8')
-        json_content = json.loads(file_content)
-        api = bot.config(json_content['consumer_key'], json_content['consumer_secret'],
-                         json_content['access_token'], json_content['access_token_secret'])
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
+        table = dynamodb.Table('WhatToWatchDB')
+        response2 = table.get_item(Key={'Field': 'consumer_key'})
+        consumer_key = response2['Item']['StringValue']
+        response3 = table.get_item(Key={'Field': 'consumer_secret'})
+        consumer_secret = response3['Item']['StringValue']
+        response4 = table.get_item(Key={'Field': 'access_token'})
+        access_token = response4['Item']['StringValue']
+        response5 = table.get_item(Key={'Field': 'access_token_secret'})
+        access_token_secret = response5['Item']['StringValue']
+        api = bot.config(consumer_key, consumer_secret,
+                         access_token, access_token_secret)
         bot.reply(api,
                   record['messageAttributes']['user']['stringValue'],
                   record['messageAttributes']['id']['stringValue'],

@@ -58,7 +58,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
     ]
   }
 
-statement {
+  statement {
     sid = "AllowReadingSQS"
     effect = "Allow"
 
@@ -68,6 +68,18 @@ statement {
 
     actions = [
     "sqs:*"
+    ]
+  }
+  statement {
+    sid = "AllowUpdateDB"
+    effect = "Allow"
+
+    resources = [
+     "${aws_dynamodb_table.basic-dynamodb-table.arn}",
+    ]
+
+    actions = [
+    "dynamodb:*"
     ]
   }
 }
